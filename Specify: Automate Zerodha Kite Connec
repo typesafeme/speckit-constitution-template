@@ -1,0 +1,55 @@
+title: Automate Zerodha Kite Connect Daily Access Token Retrieval
+
+description: >
+  A Python feature to automate logging into Zerodha Kite Connect each trading day,
+  securely retrieving the request token via TOTP-based 2FA, and exchanging it for an API access token.
+  This feature ensures security, readability, and compliance with Zerodha's mandatory daily manual login.
+
+goals:
+  - Automate daily Zerodha Kite login and 2FA verification using TOTP.
+  - Securely handle all sensitive credentials (username, password, API keys, TOTP secret).
+  - Capture request token from local HTTP callback server (e.g., http://localhost:8888/callback).
+  - Exchange request token for persistent access token via KiteConnect API.
+  - Schedule automation script to run at market open times (after 7:35 am) for seamless token renewal.
+  - Prevent leakage of credentials or tokens in logs, errors, or outputs.
+  - Make code modular, readable, PEP8-compliant, with robust error handling and security checks.
+
+requirements:
+  - Must load credentials exclusively from OS environment variables or encrypted vaults.
+  - Use `pyotp` or equivalent to generate TOTP codes dynamically at login time.
+  - Implement an HTTP listener on localhost port 8888 to capture authentication redirect and parse request token.
+  - Use only official KiteConnect Python SDK and HTTPS requests for API calls.
+  - Full error handling for login failures, network issues, invalid TOTP, and token exchange failures.
+  - Sanitize logging to exclude all secrets and tokens.
+  - Include unit tests with mocks for HTTP interactions and token exchange.
+  - Provide documentation for environment setup, credential provisioning, and scheduled task setup.
+  - Comply with Zerodha's regulation that a manual login is required daily; script does not circumvent this.
+  - Run script in single-user, secure environment only.
+
+features:
+  - `login_with_totp()`: accept credentials, generate TOTP, submit login, and handle response.
+  - `start_local_callback_server()`: listen for redirected request to localhost callback URL and extract request token.
+  - `exchange_request_token()`: use KiteConnect API to exchange request token for access token.
+  - `secure_logger()`: logging wrapper that redacts sensitive information.
+  - `main()`: coordinate login, token capture, exchange, and error handling.
+  - `schedule_task()`: recommended instructions for setting up cron/Task Scheduler.
+
+security:
+  - No secrets in source code or logs.
+  - HTTP traffic encrypted via HTTPS for all API requests.
+  - TOTP secrets secured and not exposed anywhere.
+  - Exceptions sanitized for no sensitive data leaks.
+  - Scheduled runs on trusted machines only.
+
+success_criteria:
+  - Script runs automatically daily and fetches a valid access token before market opens.
+  - No credential leakage observed in logs or outputs.
+  - Login failures trigger retries or alerts without exposing secrets.
+  - Documentation enables users to configure environment and scheduled jobs securely.
+
+exclude:
+  - Storing plaintext credentials in source.
+  - Usage of browser GUI automation unless containerized and justified.
+  - Running automation on shared or untrusted servers.
+  - Sharing credentials or tokens outside authorized user.
+
