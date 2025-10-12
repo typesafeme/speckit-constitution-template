@@ -1,0 +1,39 @@
+ title: Zerodha Kite Daily Access Token Automation
+
+description: >
+  Secure, maintainable Python automation to obtain Zerodha Kite Connect API access tokens daily using TOTP 2FA, suitable for a single-user scheduled workflow.
+
+boundary:
+  - No credentials (username, password, API keys, TOTP seed) stored in code; they must be loaded from environment variables or encrypted vaults only.
+  - TOTP seed storage must strictly use secure mechanisms; plaintext or git history exposure is forbidden.
+  - All API calls use `kiteconnect`, `pyotp`, and official Python HTTPS requests; browser automation is discouraged except if containerized and justified.
+  - Never log, print, or expose user secrets, request tokens, or API tokens to any output, logs, or error messages.
+  - Error handling must redact sensitive details and prevent any secret exposure.
+  - Schedule (cron/Task Scheduler) runs only in a secure, private environment; avoid cloud/public VMs unless credentials are encrypted and exclusive.
+  - The workflow must comply with Zerodha’s daily manual authentication policy; access token automation should not bypass regulations.
+  - All tests and mockups use dummy credentials; secrets are strictly excluded from test suites and artifacts.
+  - Code style follows PEP8; structure should be clearly commented and modular for future audits and security review.
+
+requirements:
+  - Python 3.8+; only `kiteconnect`, `pyotp`, `requests` dependencies.
+  - .env or secure secrets vault setup for credentials.
+  - Inclusion of `requirements.txt` and a comprehensive README on setup and security.
+  - Regular dependency and code reviews for security and clarity.
+
+security_checklist:
+  - [x] No hardcoded secrets in any code or git history.
+  - [x] Secure storage for credentials and TOTP seed.
+  - [x] HTTPS for all API communication.
+  - [x] Error handling sanitized for sensitive data.
+  - [x] No logs or output containing secrets.
+  - [x] Scheduled scripts run only in a trusted user environment.
+  - [x] Manual login compliance for Zerodha rules.
+
+compliance:
+  - Respects Zerodha’s required manual login each day.
+  - Maintains single-user, private credential scope.
+  - No sharing, public deployment, or credential exposure.
+
+notes:
+  - Maintain code and dependency reviews focused on security and compliance.
+  - Scripts are private/personal only and never distributed with working credentials or secrets.
